@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Vision Test", group="Pushbot")
-public class Vision extends LinearOpMode {
+public class VisionTest extends LinearOpMode {
     ObjectDetection objectDetection = new ObjectDetection();
 
     @Override
