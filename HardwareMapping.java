@@ -6,52 +6,28 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 public class HardwareMapping
 {
-    /* Public OpMode members. */
-//    public DcMotor leftFrontMotor = null;
-//    public DcMotor leftRearMotor = null;
-//    public DcMotor rightFrontMotor = null;
-//    public DcMotor rightRearMotor = null;
-    public BNO055IMU imu = null;
-    public WebcamName webcamName = null;
-//    public DcMotor elevatorMotor = null;
-//    public Servo clawServo = null;
+    public DcMotor leftFrontMotor = null;
+    public DcMotor leftBackMotor = null;
+    public DcMotor rightFrontMotor = null;
+    public DcMotor rightBackMotor = null;
 
-    /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    ElapsedTime runtime  = new ElapsedTime();
-
-    /* Constructor */
-    public HardwareMapping(){
-    }
+    HardwareMap hardwareMap =  null;
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hardware) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
+        hardwareMap = hardware;
 
         // Define and Initialize Motors
-//        leftFrontMotor = setupMotor("leftFrontMotor", DcMotor.Direction.REVERSE, 0, true,true);
-//        leftRearMotor = setupMotor("leftRearMotor", DcMotor.Direction.REVERSE, 0, true,true);
-//        rightFrontMotor = setupMotor("rightFrontMotor", DcMotor.Direction.FORWARD, 0, true,true);
-//        rightRearMotor = setupMotor("rightRearMotor", DcMotor.Direction.FORWARD, 0, true,true);
-
-        webcamName = setupWebcam("Webcam 1");
-
-//        elevatorMotor = setupMotor("elevatorMotor", DcMotor.Direction.FORWARD, 0, true,true);
-//        carouselMotor = setupMotor("carouselMotor", DcMotor.Direction.FORWARD, 0, false,true);
-//        clawServo = setupServo("clawServo",  0.4);
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-
-        imu = hwMap.get(BNO055IMU.class,"imu");
-        imu.initialize(parameters);
+        leftFrontMotor = setupMotor("leftFrontMotor", DcMotor.Direction.FORWARD, 0, true,true);
+        leftBackMotor = setupMotor("leftBackMotor", DcMotor.Direction.FORWARD, 0, true,true);
+        rightFrontMotor = setupMotor("rightFrontMotor", DcMotor.Direction.REVERSE, 0, true,true);
+        rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
     }
 
     /* Init Motor, set direction, initial power and encoder runmode (if applicable)
@@ -59,7 +35,8 @@ public class HardwareMapping
      */
     private DcMotor setupMotor(String name, DcMotorSimple.Direction direction, int initialPower, boolean useEncoder, boolean brakeMode){
         try {
-            DcMotor motor = hwMap.get(DcMotor.class, name);
+
+            DcMotor motor = hardwareMap.get(DcMotor.class, name);
             motor.setDirection(direction);
             motor.setPower(initialPower);
 
@@ -84,7 +61,7 @@ public class HardwareMapping
      */
     private CRServo setupCRServo(String name, int initialPower){
         try {
-            CRServo servo = hwMap.get(CRServo.class, name);
+            CRServo servo = hardwareMap.get(CRServo.class, name);
             servo.setPower(initialPower);
             return servo;
         }
@@ -98,7 +75,7 @@ public class HardwareMapping
      */
     private Servo setupServo(String name, double initialPosition){
         try {
-            Servo servo = hwMap.get(Servo.class, name);
+            Servo servo = hardwareMap.get(Servo.class, name);
             servo.setPosition(initialPosition);
             return servo;
         }
@@ -112,7 +89,7 @@ public class HardwareMapping
      */
     private WebcamName setupWebcam(String name){
         try {
-            WebcamName webcamName = hwMap.get(WebcamName.class, name);
+            WebcamName webcamName = hardwareMap.get(WebcamName.class, name);
             return webcamName;
         }
         catch(Exception e) {
