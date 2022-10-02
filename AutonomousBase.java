@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 public abstract class AutonomousBase extends LinearOpMode {
     Commands commands = new Commands();
     HardwareMapping robot = new HardwareMapping();   // Use our hardware mapping
@@ -11,20 +16,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.init(hardwareMap);
         robot.init(hardwareMap);
 //        objectDetection.init(hardwareMap);
-        telemetry.addData("webcam", "ready");
+        telemetry.addData("Status:", "ready");
         telemetry.update();
     }
-
-//    public int readBarcodeFloor() {
-//        telemetry.addData("Reading barcode", "...");
-//        telemetry.update();
-//        int floor = objectDetection.getBarcodeFloor(objectDetection);
-//        if (floor == 0) {
-//            floor = 1;
-//            telemetry.addData("no barcode found using floor ", floor);
-//        }
-//        telemetry.addData("floor ", floor);
-//        telemetry.update();
-//        return floor;
-//    }
 }
