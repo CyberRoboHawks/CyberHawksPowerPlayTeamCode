@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -15,8 +16,10 @@ public class HardwareMapping
     public DcMotor leftBackMotor = null;
     public DcMotor rightFrontMotor = null;
     public DcMotor rightBackMotor = null;
+    public BNO055IMU imu = null;
 
     HardwareMap hardwareMap =  null;
+    public ElapsedTime runtime  = new ElapsedTime();
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap hardware) {
@@ -28,6 +31,12 @@ public class HardwareMapping
         leftBackMotor = setupMotor("leftBackMotor", DcMotor.Direction.FORWARD, 0, true,true);
         rightFrontMotor = setupMotor("rightFrontMotor", DcMotor.Direction.REVERSE, 0, true,true);
         rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
+        imu.initialize(parameters);
     }
 
     /* Init Motor, set direction, initial power and encoder runmode (if applicable)
@@ -40,15 +49,15 @@ public class HardwareMapping
             motor.setDirection(direction);
             motor.setPower(initialPower);
 
-            if (useEncoder){
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-            if(brakeMode){
-                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }else{
-                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            }
+//            if (useEncoder){
+//                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
+//
+//            if(brakeMode){
+//                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            }else{
+//                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//            }
             return motor;
         }
         catch(Exception e) {

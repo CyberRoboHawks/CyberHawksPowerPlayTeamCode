@@ -1,50 +1,82 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 
 public class Commands extends HardwareMapping {
+    static final double COUNTS_PER_MOTOR_REV = 480;    // eg: TETRIX Motor Encoder (1440 - 60:1; 960 - 40:1, 480 - 20:1)
+    static final double WHEEL_DIAMETER_INCHES = 4.0;   // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder (1440 - 60:1; 960 - 40:1)
-    static final double DRIVE_GEAR_REDUCTION = .33;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+    //    static final double AUTONOMOUS_DRIVE_SPEED = .4;
+//    static final double AUTONOMOUS_TURN_SPEED = .2;
+    private final ElapsedTime runtime = new ElapsedTime();
 
-    static final double AUTONOMOUS_DRIVE_SPEED = .6;
-    static final double AUTONOMOUS_TURN_SPEED = .2;
-    private final ElapsedTime runtime  = new ElapsedTime();
+    public enum strafeDirection {
+        Right,
+        Left
+    }
+
+    // Strafe right
+    public void strafeRight(double power, double distanceInInches, double timeout) {
+        // TODO call encoderDriveStrafe to the Right
+    }
+
+    // Strafe left
+    public void strafeLeft(double power, double distanceInInches, double timeout) {
+        // TODO call encoderDriveStrafe to the Left
+    }
 
     // Drive forward
-    // Drive backward
-    // Strafe right
-    // Strafe left
-    // Rotate right (clockwise)
-    // Rotate left (counter-clockwise)
-    public void driveForward(double power, double distanceInInches, double timeout){
-        encoderDrive(power,distanceInInches,timeout);
-    }
-    public void driveBackwards(double power, double distanceInInches, double timeout){
-        encoderDrive(-power,-distanceInInches,timeout);
-    }
-    public void spinLeft(double power, double degrees, double timeout){
-        gyroTurn(-power, power, degrees, timeout);
-    }
-    public void spinRight(double power, double degrees, double timeout){
-        gyroTurn(power, -power, degrees, timeout);
+    public void driveForward(double power, double distanceInInches, double timeout) {
+        encoderDriveStraight(power, distanceInInches, timeout);
     }
 
-    private void gyroTurn(double leftMotorPower, double rightMotorPower, double degrees, double timeout){
+    // Drive backward
+    public void driveBackwards(double power, double distanceInInches, double timeout) {
+        encoderDriveStraight(power, -distanceInInches, timeout);
+    }
+
+    // Rotate left (counter-clockwise)
+    public void spinLeft(double power, double heading, double timeout) {
+        gyroTurn(-power, power, heading, timeout);
+    }
+
+    // Rotate right (clockwise)
+    public void spinRight(double power, double heading, double timeout) {
+        gyroTurn(power, -power, heading, timeout);
+    }
+
+    //
+    public void quickSpin(double power, double heading, double timeout) {
+        double currentAngle = getAngle();
+        if (currentAngle < 0) {
+            if (heading < currentAngle || (currentAngle < -80 && heading > 90)) {
+                if (heading == 180) {
+                    heading = -179;
+                }
+                spinRight(power, heading, timeout);
+            } else {
+                spinLeft(power, heading, timeout);
+            }
+        } else {
+            if (heading < currentAngle || (currentAngle > 80 && heading < -90)) {
+                spinRight(power, heading, timeout);
+            } else {
+                spinLeft(power, heading, timeout);
+            }
+        }
+    }
+
+    private void gyroTurn(double leftMotorPower, double rightMotorPower, double heading, double timeout) {
         runtime.reset();
 
-        while(Math.abs(getRemainingAngle(degrees)) >= 2 && (runtime.seconds() < timeout)){
+        while (Math.abs(getRemainingAngle(heading)) >= 10 && (runtime.seconds() < timeout)) {
             leftFrontMotor.setPower(leftMotorPower);
             leftBackMotor.setPower(leftMotorPower);
             rightFrontMotor.setPower(rightMotorPower);
@@ -55,36 +87,29 @@ public class Commands extends HardwareMapping {
 
     private double getRemainingAngle(double targetAngle) {
         // calculate angle in -179 to +180 range  (
-        Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return targetAngle - angles.firstAngle;
     }
 
-    private void encoderDrive(double speed, double distanceInches, double timeoutS) {
-        int newLeftRearTarget;
-        int newLeftFrontTarget;
-        int newRightRearTarget;
-        int newRightFrontTarget;
+    private double getAngle() {
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+    }
 
-        // Determine new target position, and pass to motor controller
-        newLeftRearTarget = leftBackMotor.getCurrentPosition() + (int) (distanceInches * COUNTS_PER_INCH);
-        newLeftFrontTarget = leftFrontMotor.getCurrentPosition() + (int) (distanceInches * COUNTS_PER_INCH);
-        newRightRearTarget = rightBackMotor.getCurrentPosition() + (int) (distanceInches * COUNTS_PER_INCH);
-        newRightFrontTarget = rightFrontMotor.getCurrentPosition() + (int) (distanceInches * COUNTS_PER_INCH);
-
-        leftBackMotor.setTargetPosition(newLeftRearTarget);
-        leftFrontMotor.setTargetPosition(newLeftFrontTarget);
-        rightBackMotor.setTargetPosition(newRightRearTarget);
-        rightFrontMotor.setTargetPosition(newRightFrontTarget);
+    private void encoderRunToPosition(double power, int leftFrontTarget, int leftBackTarget, int rightFrontTarget, int rightBackTarget, double timeoutS) {
+        leftFrontMotor.setTargetPosition(leftFrontTarget);
+        leftBackMotor.setTargetPosition(leftBackTarget);
+        rightFrontMotor.setTargetPosition(rightFrontTarget);
+        rightBackMotor.setTargetPosition(rightBackTarget);
 
         // Turn On RUN_TO_POSITION
         setMotorRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // reset the timeout time and start motion.
         runtime.reset();
-        leftBackMotor.setPower(Math.abs(speed));
-        leftFrontMotor.setPower(Math.abs(speed));
-        rightBackMotor.setPower(Math.abs(speed));
-        rightFrontMotor.setPower(Math.abs(speed));
+        leftBackMotor.setPower(Math.abs(power));
+        leftFrontMotor.setPower(Math.abs(power));
+        rightBackMotor.setPower(Math.abs(power));
+        rightFrontMotor.setPower(Math.abs(power));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -98,7 +123,6 @@ public class Commands extends HardwareMapping {
                                 && leftFrontMotor.isBusy()
                                 && rightBackMotor.isBusy()
                                 && rightFrontMotor.isBusy())) {
-
         }
 
         // Stop all motion;
@@ -108,6 +132,38 @@ public class Commands extends HardwareMapping {
         setMotorRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    private void encoderDriveStraight(double power, double distanceInches, double timeoutS) {
+        int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
+
+        // Determine new target positions, and pass to motor controller
+        int leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
+        int leftFrontTarget = leftFrontMotor.getCurrentPosition() + newMotorPosition;
+        int rightBackTarget = rightBackMotor.getCurrentPosition() + newMotorPosition;
+        int rightFrontTarget = rightFrontMotor.getCurrentPosition() + newMotorPosition;
+
+        encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
+    }
+
+    private void encoderDriveStrafe(double power, double distanceInches, strafeDirection direction, double timeoutS) {
+        int leftBackTarget = 0;
+        int leftFrontTarget = 0;
+        int rightBackTarget = 0;
+        int rightFrontTarget = 0;
+
+        // strafe offset to add 140% for difference in requested and actual movement
+        distanceInches = distanceInches * 1.40;
+        int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
+
+        // Determine new target position, and pass to motor controller
+        if (direction == strafeDirection.Left) {
+            //TODO Left strafe
+        } else {
+            //TODO Right strafe
+        }
+
+        encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
+    }
+
     public void setMotorRunMode(DcMotor.RunMode mode) {
         leftBackMotor.setMode(mode);
         leftFrontMotor.setMode(mode);
@@ -115,7 +171,7 @@ public class Commands extends HardwareMapping {
         rightFrontMotor.setMode(mode);
     }
 
-    private void stopDrivingMotors(){
+    private void stopDrivingMotors() {
         leftBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
         rightBackMotor.setPower(0);
