@@ -14,6 +14,7 @@ public class AutonomousDrive extends AutonomousBase {
     public void runOpMode() {
         // Initialize the hardware variables.
         startupInit();
+        final double DRIVE_SPEED = 0.2;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -34,22 +35,24 @@ public class AutonomousDrive extends AutonomousBase {
 //            sleep(500);
 
             // Drive in a square
-            commands.driveForward(0.2, 20, 2);
-            sleep(500);
-            commands.spinLeft(0.2, 90, 3);
-            sleep(500);
-            commands.driveForward(0.2, 20, 2);
-            sleep(500);
-            commands.spinLeft(0.2, 180, 3);
-            sleep(500);
-            commands.driveForward(0.2, 20, 2);
-            sleep(500);
-            commands.spinLeft(0.2, -90, 3);
-            sleep(500);
-            commands.driveForward(0.2, 20, 2);
-            sleep(500);
-            commands.spinLeft(0.2, 0, 3);
-
+//            commands.driveForward(DRIVE_SPEED, 20, 2);
+//            sleep(500);
+//            commands.spinLeft(DRIVE_SPEED, 90, 3);
+//            sleep(500);
+//            commands.driveForward(DRIVE_SPEED, 20, 2);
+//            sleep(500);
+//            commands.spinLeft(DRIVE_SPEED, 180, 3);
+//            sleep(500);
+//            commands.driveForward(DRIVE_SPEED, 20, 2);
+//            sleep(500);
+//            commands.spinLeft(DRIVE_SPEED, -90, 3);
+//            sleep(500);
+//            commands.driveForward(DRIVE_SPEED, 20, 2);
+//            sleep(500);
+//            commands.spinLeft(DRIVE_SPEED, 0, 3);
+//            sleep(500);
+            commands.strafeRight(DRIVE_SPEED, 20, 2);
+            commands.strafeLeft(DRIVE_SPEED, 30, 2);
             sleep(30000);
         }
     }

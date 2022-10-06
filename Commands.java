@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Commands extends HardwareMapping {
     static final double COUNTS_PER_MOTOR_REV = 480;    // eg: TETRIX Motor Encoder (1440 - 60:1; 960 - 40:1, 480 - 20:1)
     static final double WHEEL_DIAMETER_INCHES = 4.0;   // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV) / (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV) / (WHEEL_DIAMETER_INCHES * 3.14159);
 
     //    static final double AUTONOMOUS_DRIVE_SPEED = .4;
 //    static final double AUTONOMOUS_TURN_SPEED = .2;
@@ -24,13 +24,16 @@ public class Commands extends HardwareMapping {
 
     // Strafe right
     public void strafeRight(double power, double distanceInInches, double timeout) {
-        // TODO call encoderDriveStrafe to the Right
+
+        encoderDriveStrafe(power, distanceInInches, strafeDirection.Right, timeout);
     }
 
     // Strafe left
     public void strafeLeft(double power, double distanceInInches, double timeout) {
         // TODO call encoderDriveStrafe to the Left
+        encoderDriveStrafe(power, distanceInInches, strafeDirection.Left,timeout);
     }
+
 
     // Drive forward
     public void driveForward(double power, double distanceInInches, double timeout) {
@@ -157,8 +160,17 @@ public class Commands extends HardwareMapping {
         // Determine new target position, and pass to motor controller
         if (direction == strafeDirection.Left) {
             //TODO Left strafe
+             leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
+             leftFrontTarget = leftFrontMotor.getCurrentPosition() - newMotorPosition;
+             rightBackTarget = rightBackMotor.getCurrentPosition() - newMotorPosition;
+             rightFrontTarget = rightFrontMotor.getCurrentPosition() + newMotorPosition;
+
         } else {
             //TODO Right strafe
+             leftBackTarget = leftBackMotor.getCurrentPosition() - newMotorPosition;
+             leftFrontTarget = leftFrontMotor.getCurrentPosition() + newMotorPosition;
+             rightBackTarget = rightBackMotor.getCurrentPosition() + newMotorPosition;
+             rightFrontTarget = rightFrontMotor.getCurrentPosition() - newMotorPosition;
         }
 
         encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
