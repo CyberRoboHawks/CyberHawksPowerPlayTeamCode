@@ -12,6 +12,17 @@ public abstract class AutonomousBase extends LinearOpMode {
     HardwareMapping robot = new HardwareMapping();   // Use our hardware mapping
     //ObjectDetection objectDetection = new ObjectDetection();
 
+    public enum ParkingZone {
+        Zone1Bolt,
+        Zone2Bulb,
+        Zone3Panel
+    }
+
+    public enum StartingSide {
+        Left,
+        Right
+    }
+
     public void startupInit() {
         commands.init(hardwareMap);
         robot.init(hardwareMap);

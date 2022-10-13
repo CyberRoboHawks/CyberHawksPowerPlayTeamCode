@@ -1,11 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name = "Autonomous", group = "Pushbot")
 public class AutonomousDrive extends AutonomousBase {
@@ -15,64 +9,65 @@ public class AutonomousDrive extends AutonomousBase {
         // Initialize the hardware variables.
         startupInit();
         final double DRIVE_SPEED = 0.2;
+        StartingSide startingSide = StartingSide.Right;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            // TODO add Autonomous actions here
-            commands.spinLeft(DRIVE_SPEED, -90, 3);
-            commands.driveForward(DRIVE_SPEED, 36, 3);
-            commands.spinRight(DRIVE_SPEED, 0, 3);
-            commands.driveForward(DRIVE_SPEED, 26, 3);
-            /* TODO add arm code */
-            //TODO parking using camera image code
-            commands.spinRight(DRIVE_SPEED, -90, 3);
-            switch (1) {
-                case 1:
-                    commands.driveForward(DRIVE_SPEED, 12, 3);
-                case 2:
-                    commands.driveForward(DRIVE_SPEED, 36, 3);
-                case 3:
-                    commands.driveForward(DRIVE_SPEED, 60, 5);
+            //TODO read signal
+            ParkingZone parkingZone = ParkingZone.Zone2Bulb;
+
+            //TODO close claw on the cone
+
+            //TODO raise claw off the floor
+
+            commands.driveForward(DRIVE_SPEED, 54, 5);
+            // TODO raise claw to the high position
+
+            // turn towards the junction pole
+            switch (startingSide){
+                case Left:
+                    commands.spinRight(DRIVE_SPEED, -45, 3);
+                    break;
+                case Right:
+                    commands.spinLeft(DRIVE_SPEED, 45, 3);
+                    break;
             }
 
-//            commands.driveForward(0.2,10,2);
-//            sleep(450);
-//            commands.driveBackwards(0.2,10,2);
-//            sleep(499);
-//            commands.spinLeft(.2, 90, 3);
-//            sleep(500);
-//            commands.spinRight(.2, -90, 3);
-//            sleep(500);
-//            commands.spinLeft(.2, 0, 3);
-//            sleep(500);
+            //TODO open claw and drop cone
 
-            // Drive in a square
-//            commands.driveForward(DRIVE_SPEED, 20, 2);
-//            sleep(500);
-//            commands.spinLeft(DRIVE_SPEED, 90, 3);
-//            sleep(500);
-//            commands.driveForward(DRIVE_SPEED, 20, 2);
-//            sleep(500);
-//            commands.spinLeft(DRIVE_SPEED, 180, 3);
-//            sleep(500);
-//            commands.driveForward(DRIVE_SPEED, 20, 2);
-//            sleep(500);
-//            commands.spinLeft(DRIVE_SPEED, -90, 3);
-//            sleep(500);
-//            commands.driveForward(DRIVE_SPEED, 20, 2);
-//            sleep(500);
-//            commands.spinLeft(DRIVE_SPEED, 0, 3);
-//            sleep(500);
-//            commands.strafeRight(DRIVE_SPEED, 20, 2);
-//            commands.strafeLeft(DRIVE_SPEED, 30, 2);
-//            sleep(30000);
+            // turn back towards the init/starting heading
+            switch (startingSide){
+                case Left:
+                    commands.spinLeft(DRIVE_SPEED, 0, 3);
+                    break;
+                case Right:
+                    commands.spinRight(DRIVE_SPEED, 0, 3);
+                    break;
+            }
+
+            //TODO lower claw to floor
+
+            switch (parkingZone) {
+                case Zone1Bolt:
+                    commands.spinLeft(DRIVE_SPEED, 90, 3);
+                    commands.driveForward(DRIVE_SPEED, 24, 3);
+                    break;
+                case Zone2Bulb:
+                    // already in zone 2 - stop
+                    break;
+                case Zone3Panel:
+                    commands.spinRight(DRIVE_SPEED, -90, 3);
+                    commands.driveForward(DRIVE_SPEED, 24, 5);
+                    break;
+            }
+
+           sleep(30000);
         }
     }
 }
-
 
 //            Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 //            telemetry.addData("Roll (x)", "%4.2f", angles.thirdAngle);
