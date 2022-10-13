@@ -22,6 +22,21 @@ public class AutonomousDrive extends AutonomousBase {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // TODO add Autonomous actions here
+            commands.spinLeft(DRIVE_SPEED, -90, 3);
+            commands.driveForward(DRIVE_SPEED, 36, 3);
+            commands.spinRight(DRIVE_SPEED, 0, 3);
+            commands.driveForward(DRIVE_SPEED, 26, 3);
+            /* TODO add arm code */
+            //TODO parking using camera image code
+            commands.spinRight(DRIVE_SPEED, -90, 3);
+            switch (1) {
+                case 1:
+                    commands.driveForward(DRIVE_SPEED, 12, 3);
+                case 2:
+                    commands.driveForward(DRIVE_SPEED, 36, 3);
+                case 3:
+                    commands.driveForward(DRIVE_SPEED, 60, 5);
+            }
 
 //            commands.driveForward(0.2,10,2);
 //            sleep(450);
@@ -51,9 +66,9 @@ public class AutonomousDrive extends AutonomousBase {
 //            sleep(500);
 //            commands.spinLeft(DRIVE_SPEED, 0, 3);
 //            sleep(500);
-            commands.strafeRight(DRIVE_SPEED, 20, 2);
-            commands.strafeLeft(DRIVE_SPEED, 30, 2);
-            sleep(30000);
+//            commands.strafeRight(DRIVE_SPEED, 20, 2);
+//            commands.strafeLeft(DRIVE_SPEED, 30, 2);
+//            sleep(30000);
         }
     }
 }
