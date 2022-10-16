@@ -16,7 +16,9 @@ public class HardwareMapping
     public DcMotor leftBackMotor = null;
     public DcMotor rightFrontMotor = null;
     public DcMotor rightBackMotor = null;
+    public DcMotor liftMotor = null;
     public BNO055IMU imu = null;
+    public Servo grabberServo = null;
 
     HardwareMap hardwareMap =  null;
     public ElapsedTime runtime  = new ElapsedTime();
@@ -31,6 +33,10 @@ public class HardwareMapping
         leftBackMotor = setupMotor("leftBackMotor", DcMotor.Direction.FORWARD, 0, true,true);
         rightFrontMotor = setupMotor("rightFrontMotor", DcMotor.Direction.REVERSE, 0, true,true);
         rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
+
+        //TODO setup lift and grabber motors
+        //grabberServo = setupServo("grabberServo",  0.4);
+        //liftMotor = setupMotor("liftMotor", DcMotor.Direction.FORWARD, 0, true,true);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -49,15 +55,15 @@ public class HardwareMapping
             motor.setDirection(direction);
             motor.setPower(initialPower);
 
-//            if (useEncoder){
-//                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            }
-//
-//            if(brakeMode){
-//                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            }else{
-//                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//            }
+            if (useEncoder){
+                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+            if(brakeMode){
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }else{
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            }
             return motor;
         }
         catch(Exception e) {

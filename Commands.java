@@ -13,27 +13,19 @@ public class Commands extends HardwareMapping {
     static final double WHEEL_DIAMETER_INCHES = 4.0;   // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV) / (WHEEL_DIAMETER_INCHES * 3.14159);
 
-    //    static final double AUTONOMOUS_DRIVE_SPEED = .4;
-//    static final double AUTONOMOUS_TURN_SPEED = .2;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    public enum strafeDirection {
-        Right,
-        Left
+    public void grabberClose() {
+        //grabberServo.setPosition(1);
     }
 
-    // Strafe right
-    public void strafeRight(double power, double distanceInInches, double timeout) {
-
-        encoderDriveStrafe(power, distanceInInches, strafeDirection.Right, timeout);
+    public void grabberOpen(){
+        //grabberServo.setPosition(0.4);
     }
 
-    // Strafe left
-    public void strafeLeft(double power, double distanceInInches, double timeout) {
-        // TODO call encoderDriveStrafe to the Left
-        encoderDriveStrafe(power, distanceInInches, strafeDirection.Left,timeout);
+    public void grabberOpenMidway(){
+        //grabberServo.setPosition(0.7);
     }
-
 
     // Drive forward
     public void driveForward(double power, double distanceInInches, double timeout) {
@@ -45,6 +37,52 @@ public class Commands extends HardwareMapping {
         encoderDriveStraight(power, -distanceInInches, timeout);
     }
 
+    public void setMotorRunMode(DcMotor.RunMode mode) {
+        leftBackMotor.setMode(mode);
+        leftFrontMotor.setMode(mode);
+        rightBackMotor.setMode(mode);
+        rightFrontMotor.setMode(mode);
+    }
+
+    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition){
+        // TODO add move lift logic
+        //int currentMotorPosition = liftMotor.getCurrentPosition();
+        //int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
+
+        // Determine new target positions, and pass to motor controller
+        //int leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
+    }
+
+    public void liftResetPosition(){
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void liftMoveUp(){
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setPower(.5);
+    }
+
+    public void liftMoveDown(){
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setPower(-.5);
+    }
+
+    public void liftStop(){
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setPower(0);
+    }
+
+    // Strafe right
+    public void strafeRight(double power, double distanceInInches, double timeout) {
+        encoderDriveStrafe(power, distanceInInches, PowerPlayEnums.strafeDirection.Right, timeout);
+    }
+
+    // Strafe left
+    public void strafeLeft(double power, double distanceInInches, double timeout) {
+        encoderDriveStrafe(power, distanceInInches, PowerPlayEnums.strafeDirection.Left,timeout);
+    }
+
+
     // Rotate left (counter-clockwise)
     public void spinLeft(double power, double heading, double timeout) {
         gyroTurn(-power, power, heading, timeout);
@@ -54,6 +92,8 @@ public class Commands extends HardwareMapping {
     public void spinRight(double power, double heading, double timeout) {
         gyroTurn(power, -power, heading, timeout);
     }
+
+
 
     //
     public void quickSpin(double power, double heading, double timeout) {
@@ -147,7 +187,7 @@ public class Commands extends HardwareMapping {
         encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
     }
 
-    private void encoderDriveStrafe(double power, double distanceInches, strafeDirection direction, double timeoutS) {
+    private void encoderDriveStrafe(double power, double distanceInches, PowerPlayEnums.strafeDirection direction, double timeoutS) {
         int leftBackTarget = 0;
         int leftFrontTarget = 0;
         int rightBackTarget = 0;
@@ -158,15 +198,13 @@ public class Commands extends HardwareMapping {
         int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
 
         // Determine new target position, and pass to motor controller
-        if (direction == strafeDirection.Left) {
-            //TODO Left strafe
+        if (direction == PowerPlayEnums.strafeDirection.Left) {
              leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
              leftFrontTarget = leftFrontMotor.getCurrentPosition() - newMotorPosition;
              rightBackTarget = rightBackMotor.getCurrentPosition() - newMotorPosition;
              rightFrontTarget = rightFrontMotor.getCurrentPosition() + newMotorPosition;
 
-        } else {
-            //TODO Right strafe
+        } else { // strafe Right
              leftBackTarget = leftBackMotor.getCurrentPosition() - newMotorPosition;
              leftFrontTarget = leftFrontMotor.getCurrentPosition() + newMotorPosition;
              rightBackTarget = rightBackMotor.getCurrentPosition() + newMotorPosition;
@@ -174,13 +212,6 @@ public class Commands extends HardwareMapping {
         }
 
         encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
-    }
-
-    public void setMotorRunMode(DcMotor.RunMode mode) {
-        leftBackMotor.setMode(mode);
-        leftFrontMotor.setMode(mode);
-        rightBackMotor.setMode(mode);
-        rightFrontMotor.setMode(mode);
     }
 
     private void stopDrivingMotors() {
