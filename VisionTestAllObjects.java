@@ -32,11 +32,11 @@ public class VisionTestAllObjects extends LinearOpMode {
         // run until the end of Autonomous
         while (opModeIsActive()) {
 
-            //getAllRecognitions();
+            getAllRecognitions();
 
-            PowerPlayEnums.parkingZone parkingZone = objectDetection.readParkingZone(5, 500);
-            telemetry.addData("parking location found", parkingZone);
-            telemetry.update();
+//            PowerPlayEnums.parkingZone parkingZone = objectDetection.readParkingZone(5, 500);
+//            telemetry.addData("parking location found", parkingZone);
+//            telemetry.update();
 
             sleep(30000);
         }
