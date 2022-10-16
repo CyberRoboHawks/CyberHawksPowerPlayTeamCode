@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode;
+
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 
 import java.util.List;
 
@@ -25,13 +24,12 @@ public class ObjectDetection extends HardwareMapping {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
-    public ObjectDetection(){
+    public ObjectDetection() {
     }
 
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
-        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-        // first.
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that first.
         initVuforia();
         initTfod();
 
@@ -47,55 +45,39 @@ public class ObjectDetection extends HardwareMapping {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0 / 9.0);
         }
     }
 
-    /**
-     * Returns the duck position if it's found on during detection
-     * @return the X position of the duck {-1 = Not found, value between 0-600}
-     */
-    public float getDuckPosition(){
-        float duck = -1.0f;
-        if (tfod != null) {
-            // Using getRecognitions because it returns a value every time it's called
-            List<Recognition> updatedRecognitions = tfod.getRecognitions();
+    public List<Recognition> readCamera() {
+        if (tfod == null) {
+            return null;
+        }
+        // Using getRecognitions because it returns a value every time it's called
+        return tfod.getRecognitions();
+    }
 
-            if (updatedRecognitions != null) {
-                // step through the list of recognitions and get Duck position
-                for (Recognition recognition : updatedRecognitions) {
-                     if(recognition.getLabel().equals("Duck")){
-                         // find the center of the duck recognition box
-                         duck = (recognition.getLeft() + recognition.getRight()) / 2;
-                    }
+    public PowerPlayEnums.parkingZone readParkingZone(int attempts, long waitInMs) throws InterruptedException {
+        PowerPlayEnums.parkingZone parkingZone = readSignal();
+        if (parkingZone == null){
+            // try to read the signal for a set number of attempts and wait between each try
+            for (int i = 0; i <= attempts; i++) {
+                parkingZone = readSignal();
+                if (parkingZone != null){
+                    break;
                 }
+                sleep(waitInMs);
             }
         }
-        return duck;
+
+        // TODO if parkingZone not found set to Zone2Bulb (default)
+
+        return parkingZone;
     }
 
-    /**
-     * Returns an assessment of the object detection based on duck position
-     * @return the determined state {1 = level 1 (Default), 2= level 2, 3 = level 3}
-     */
-    public int getDuckState(float duckPosition){
-        // Split the viewable screen (~600 wide) into 3 zones and if the duck is found in that zone return that zone number
-        if (duckPosition < 0)
-            return 0;
-        if (duckPosition < 200)
-            return 1;
-        else if(duckPosition < 400)
-            return 2;
-        else
-            return 3;
-    }
-
-    /**
-     * Initialize the Vuforia localization engine.
-     */
+    // Initialize the Vuforia localization engine.
     private void initVuforia() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         //parameters.cameraName = webcamName;
 
@@ -110,12 +92,33 @@ public class ObjectDetection extends HardwareMapping {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        // reducing confidence to 50%
+        // reducing confidence to 30% for team signal
         tfodParameters.minResultConfidence = 0.3f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+    private PowerPlayEnums.parkingZone readSignal() {
+        if (tfod != null) {
+            // Using getRecognitions because it returns a value every time it's called
+            List<Recognition> recognitions = tfod.getRecognitions();
+
+            if (recognitions != null) {
+                for (Recognition recognition : recognitions) {
+                    switch (recognition.getLabel()) {
+                        case "1 Bolt":
+                            return PowerPlayEnums.parkingZone.Zone1Bolt;
+                        case "2 Bulb":
+                            return PowerPlayEnums.parkingZone.Zone2Bulb;
+                        case "3 Panel":
+                            return PowerPlayEnums.parkingZone.Zone3Panel;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
