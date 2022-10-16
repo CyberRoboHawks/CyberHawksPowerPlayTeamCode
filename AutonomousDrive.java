@@ -5,26 +5,30 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutonomousDrive extends AutonomousBase {
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         // Initialize the hardware variables.
         startupInit();
         final double DRIVE_SPEED = 0.2;
-        StartingSide startingSide = StartingSide.Right;
+        PowerPlayEnums.startingSide startingSide = PowerPlayEnums.startingSide.Right;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            //TODO read signal
-            ParkingZone parkingZone = ParkingZone.Zone2Bulb;
+            // read the signal for parking zone
+            PowerPlayEnums.parkingZone parkingZone = objectDetection.readParkingZone(5, 500);
 
-            //TODO close claw on the cone
+            // close grabber on the cone
+            commands.grabberClose();
 
-            //TODO raise claw off the floor
+            //raise lift to drive height
+            commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
 
+            // drive towards the high junction pole
             commands.driveForward(DRIVE_SPEED, 54, 5);
-            // TODO raise claw to the high position
+
+            // TODO raise lift to the high position
 
             // turn towards the junction pole
             switch (startingSide){
@@ -35,8 +39,9 @@ public class AutonomousDrive extends AutonomousBase {
                     commands.spinLeft(DRIVE_SPEED, 45, 3);
                     break;
             }
+            //TODO may need to move slightly forward to place cone
 
-            //TODO open claw and drop cone
+            // TODO open grabber and drop cone
 
             // turn back towards the init/starting heading
             switch (startingSide){
@@ -48,8 +53,10 @@ public class AutonomousDrive extends AutonomousBase {
                     break;
             }
 
-            //TODO lower claw to floor
+            // lower lift to drive height
+            commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
 
+            // navigate to parking location
             switch (parkingZone) {
                 case Zone1Bolt:
                     commands.spinLeft(DRIVE_SPEED, 90, 3);
