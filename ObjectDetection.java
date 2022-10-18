@@ -59,19 +59,21 @@ public class ObjectDetection extends HardwareMapping {
 
     public PowerPlayEnums.parkingZone readParkingZone(int attempts, long waitInMs) throws InterruptedException {
         PowerPlayEnums.parkingZone parkingZone = readSignal();
-        if (parkingZone == null){
+        if (parkingZone == null) {
             // try to read the signal for a set number of attempts and wait between each try
             for (int i = 0; i <= attempts; i++) {
                 parkingZone = readSignal();
-                if (parkingZone != null){
+                if (parkingZone != null) {
                     break;
                 }
                 sleep(waitInMs);
             }
         }
 
-        // TODO if parkingZone not found set to Zone2Bulb (default)
-
+        //  if parkingZone not found set to Zone2Bulb (default)
+        if (parkingZone == null) {
+            parkingZone = PowerPlayEnums.parkingZone.Zone2Bulb;
+        }
         return parkingZone;
     }
 

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -15,9 +17,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 public class TeleOpFieldCentric extends LinearOpMode {
     HardwareMapping robot = new HardwareMapping();   // Use our hardware mapping
     Commands commands = new Commands();
-    static final double STANDARD_DRIVE_SPEED = .4;
-    static final double TURBO_DRIVE_SPEED = .7;
+    static final double STANDARD_DRIVE_SPEED = .3;
+    static final double TURBO_DRIVE_SPEED = .5;
     static final double ROTATE_SPEED = .3;
+    static final double LIFT_MAX_UP_POWER = .4;
+    static final double LIFT_MAX_DOWN_POWER = .3;
 
     @Override
     public void runOpMode() {
@@ -30,6 +34,9 @@ public class TeleOpFieldCentric extends LinearOpMode {
         double forwardPower;
         double rotatePower;
         double offsetHeading = 0;
+
+        boolean isGrabberOpen = true;
+        double liftPower = 0;
 
         telemetry.addData("Status:", "Ready");
         telemetry.addData("Driving Mode:", "Robot Centric");
@@ -84,9 +91,9 @@ public class TeleOpFieldCentric extends LinearOpMode {
                 forwardPower = -gamepad1.left_stick_y;
                 rotatePower = gamepad1.right_stick_x;
 
-                telemetry.addData("strafePower:",strafePower);
-                telemetry.addData("forwardPower:",forwardPower);
-                telemetry.addData("rotatePower:",rotatePower);
+                telemetry.addData("strafePower:", strafePower);
+                telemetry.addData("forwardPower:", forwardPower);
+                telemetry.addData("rotatePower:", rotatePower);
 
                 offsetHeading = 0;
                 if (fieldCentric) {
@@ -98,9 +105,36 @@ public class TeleOpFieldCentric extends LinearOpMode {
 
             //Co-Driver controller ---------------------
             if (gamepad2 != null) {
+                if (gamepad2.b) {
+                    if (isGrabberOpen) {
+                        commands.grabberClose();
+                    } else {
+                        commands.grabberOpen();
+                    }
+                    isGrabberOpen = !isGrabberOpen;
+                    sleep(250);
+                }
 
+                if (gamepad2.right_bumper){
+                    isGrabberOpen = true;
+                    commands.grabberOpenFull();
+                }
+
+                liftPower = -gamepad2.left_stick_y;
+                if (abs(liftPower) != 0) {
+                    if (liftPower > 0) {
+                        commands.liftMoveUp(liftPower * LIFT_MAX_UP_POWER);
+                        telemetry.addData("lift move up at:",liftPower * LIFT_MAX_UP_POWER);
+                    }
+                    else{
+                        commands.liftMoveDown(liftPower * LIFT_MAX_DOWN_POWER);
+                        telemetry.addData("lift move down at:",liftPower * LIFT_MAX_DOWN_POWER);
+                    }
+                } else {
+                    commands.liftStop(0);
+                }
             }
-            telemetry.addData("robot angle:",getAngle());
+            telemetry.addData("robot angle:", getAngle());
             telemetry.update();
         }
     }
@@ -119,7 +153,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
         double yOffset = Math.sin(movementDegree - Math.PI / 4);
         double xOffset = Math.cos(movementDegree - Math.PI / 4);
 
-        double maxOffset = Math.max(Math.abs(yOffset), Math.abs(xOffset));
+        double maxOffset = Math.max(abs(yOffset), abs(xOffset));
 
         // normalize the x/y offset and apply control stick power
         yOffset = power * yOffset / maxOffset;
@@ -127,7 +161,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
 
         double leftFrontPower = (xOffset + rotate) * drivePower;
         double leftBackPower = (yOffset + rotate) * drivePower;
-        double rightFrontPower = (yOffset- rotate) * drivePower;
+        double rightFrontPower = (yOffset - rotate) * drivePower;
         double rightBackPower = (xOffset - rotate) * drivePower;
 
         // Set the power on each motor

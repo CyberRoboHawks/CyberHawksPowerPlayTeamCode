@@ -16,15 +16,15 @@ public class Commands extends HardwareMapping {
     private final ElapsedTime runtime = new ElapsedTime();
 
     public void grabberClose() {
-        //grabberServo.setPosition(1);
+        grabberServo.setPosition(.5);
     }
 
     public void grabberOpen(){
-        //grabberServo.setPosition(0.4);
+       grabberServo.setPosition(0.2);
     }
 
-    public void grabberOpenMidway(){
-        //grabberServo.setPosition(0.7);
+    public void grabberOpenFull(){
+        grabberServo.setPosition(.1);
     }
 
     // Drive forward
@@ -54,22 +54,23 @@ public class Commands extends HardwareMapping {
     }
 
     public void liftResetPosition(){
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void liftMoveUp(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setPower(.5);
+    public void liftMoveUp(double power){
+        liftMotorLeft.setPower(power);
+        liftMotorRight.setPower(power);
     }
 
-    public void liftMoveDown(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setPower(-.5);
+    public void liftMoveDown(double power){
+        liftMotorLeft.setPower(power);
+        liftMotorRight.setPower(power);
     }
 
-    public void liftStop(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setPower(0);
+    public void liftStop(double power){
+        liftMotorLeft.setPower(0);
+        liftMotorRight.setPower(0);
     }
 
     // Strafe right

@@ -10,18 +10,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-public class HardwareMapping
-{
+public class HardwareMapping {
     public DcMotor leftFrontMotor = null;
     public DcMotor leftBackMotor = null;
     public DcMotor rightFrontMotor = null;
     public DcMotor rightBackMotor = null;
-    public DcMotor liftMotor = null;
-    public BNO055IMU imu = null;
+
     public Servo grabberServo = null;
 
-    HardwareMap hardwareMap =  null;
-    public ElapsedTime runtime  = new ElapsedTime();
+    public DcMotor liftMotorLeft = null;
+    public DcMotor liftMotorRight = null;
+
+    public BNO055IMU imu = null;
+
+    HardwareMap hardwareMap = null;
+    public ElapsedTime runtime = new ElapsedTime();
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap hardware) {
@@ -35,38 +38,38 @@ public class HardwareMapping
         rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
 
         //TODO setup lift and grabber motors
-        //grabberServo = setupServo("grabberServo",  0.4);
-        //liftMotor = setupMotor("liftMotor", DcMotor.Direction.FORWARD, 0, true,true);
+        grabberServo = setupServo("grabberServo", 0.3);
+        liftMotorLeft = setupMotor("liftMotorLeft", DcMotor.Direction.FORWARD, 0, false, true);
+        liftMotorRight = setupMotor("liftMotorRight", DcMotor.Direction.REVERSE, 0, false, true);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 
-        imu = hardwareMap.get(BNO055IMU.class,"imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
     }
 
     /* Init Motor, set direction, initial power and encoder runmode (if applicable)
      * @return the configured DcMotor or null if the motor is not found
      */
-    private DcMotor setupMotor(String name, DcMotorSimple.Direction direction, int initialPower, boolean useEncoder, boolean brakeMode){
+    private DcMotor setupMotor(String name, DcMotorSimple.Direction direction, int initialPower, boolean useEncoder, boolean brakeMode) {
         try {
 
             DcMotor motor = hardwareMap.get(DcMotor.class, name);
             motor.setDirection(direction);
             motor.setPower(initialPower);
 
-            if (useEncoder){
+            if (useEncoder) {
                 motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if(brakeMode){
+            if (brakeMode) {
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }else{
+            } else {
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             }
             return motor;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -74,13 +77,12 @@ public class HardwareMapping
     /* Init CRServo and set initial power
      * @return the configured CRServo or null if the servo is not found
      */
-    private CRServo setupCRServo(String name, int initialPower){
+    private CRServo setupCRServo(String name, int initialPower) {
         try {
             CRServo servo = hardwareMap.get(CRServo.class, name);
             servo.setPower(initialPower);
             return servo;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -88,13 +90,12 @@ public class HardwareMapping
     /* Init Servo and set initial position
      * @return the configured Servo or null if the servo is not found
      */
-    private Servo setupServo(String name, double initialPosition){
+    private Servo setupServo(String name, double initialPosition) {
         try {
             Servo servo = hardwareMap.get(Servo.class, name);
             servo.setPosition(initialPosition);
             return servo;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -102,12 +103,11 @@ public class HardwareMapping
     /* Init WebcamName
      * @return the configured WebcamName or null if the webcam is not found
      */
-    private WebcamName setupWebcam(String name){
+    private WebcamName setupWebcam(String name) {
         try {
             WebcamName webcamName = hardwareMap.get(WebcamName.class, name);
             return webcamName;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
