@@ -16,15 +16,15 @@ public class Commands extends HardwareMapping {
     private final ElapsedTime runtime = new ElapsedTime();
 
     public void grabberClose() {
-        grabberServo.setPosition(.5);
+        grabberServo.setPosition(.4);
     }
 
     public void grabberOpen(){
-       grabberServo.setPosition(0.2);
+       grabberServo.setPosition(0.1);
     }
 
     public void grabberOpenFull(){
-        grabberServo.setPosition(.1);
+        grabberServo.setPosition(0);
     }
 
     // Drive forward
@@ -68,7 +68,7 @@ public class Commands extends HardwareMapping {
         liftMotorRight.setPower(power);
     }
 
-    public void liftStop(double power){
+    public void liftStop(){
         liftMotorLeft.setPower(0);
         liftMotorRight.setPower(0);
     }

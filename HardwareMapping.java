@@ -38,7 +38,7 @@ public class HardwareMapping {
         rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
 
         //TODO setup lift and grabber motors
-        grabberServo = setupServo("grabberServo", 0.3);
+        grabberServo = setupServo("grabberServo", 0.4);
         liftMotorLeft = setupMotor("liftMotorLeft", DcMotor.Direction.FORWARD, 0, false, true);
         liftMotorRight = setupMotor("liftMotorRight", DcMotor.Direction.REVERSE, 0, false, true);
 

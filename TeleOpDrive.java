@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name = "TeleOpDrive", group = "TeleOp")
-//@Disabled
+@Disabled
 public class TeleOpDrive extends LinearOpMode {
     HardwareMapping robot = new HardwareMapping();   // Use our hardware mapping
     Commands commands = new Commands();
