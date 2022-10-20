@@ -20,7 +20,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
     static final double STANDARD_DRIVE_SPEED = .3;
     static final double TURBO_DRIVE_SPEED = .5;
     static final double ROTATE_SPEED = .3;
-    static final double LIFT_MAX_UP_POWER = .5;
+    static final double LIFT_MAX_UP_POWER = .4;
     static final double LIFT_MAX_DOWN_POWER = .3;
 
     @Override
@@ -113,11 +113,6 @@ public class TeleOpFieldCentric extends LinearOpMode {
                     }
                     isGrabberOpen = !isGrabberOpen;
                     sleep(250);
-                }
-
-                if (gamepad2.right_bumper){
-                    isGrabberOpen = true;
-                    commands.grabberOpenFull();
                 }
 
                 liftPower = -gamepad2.left_stick_y;

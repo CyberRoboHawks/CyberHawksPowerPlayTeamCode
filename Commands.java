@@ -16,16 +16,10 @@ public class Commands extends HardwareMapping {
     private final ElapsedTime runtime = new ElapsedTime();
 
     public void grabberClose() {
-        grabberServo.setPosition(.4);
+        grabberServo.setPosition(.3);
     }
 
-    public void grabberOpen(){
-       grabberServo.setPosition(0.1);
-    }
-
-    public void grabberOpenFull(){
-        grabberServo.setPosition(0);
-    }
+    public void grabberOpen() { grabberServo.setPosition(0); }
 
     // Drive forward
     public void driveForward(double power, double distanceInInches, double timeout) {
@@ -44,7 +38,7 @@ public class Commands extends HardwareMapping {
         rightFrontMotor.setMode(mode);
     }
 
-    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition){
+    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition) {
         // TODO add move lift logic
         //int currentMotorPosition = liftMotor.getCurrentPosition();
         //int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
@@ -53,22 +47,22 @@ public class Commands extends HardwareMapping {
         //int leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
     }
 
-    public void liftResetPosition(){
+    public void liftResetPosition() {
         liftMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void liftMoveUp(double power){
+    public void liftMoveUp(double power) {
         liftMotorLeft.setPower(power);
         liftMotorRight.setPower(power);
     }
 
-    public void liftMoveDown(double power){
+    public void liftMoveDown(double power) {
         liftMotorLeft.setPower(power);
         liftMotorRight.setPower(power);
     }
 
-    public void liftStop(){
+    public void liftStop() {
         liftMotorLeft.setPower(0);
         liftMotorRight.setPower(0);
     }
@@ -80,7 +74,7 @@ public class Commands extends HardwareMapping {
 
     // Strafe left
     public void strafeLeft(double power, double distanceInInches, double timeout) {
-        encoderDriveStrafe(power, distanceInInches, PowerPlayEnums.strafeDirection.Left,timeout);
+        encoderDriveStrafe(power, distanceInInches, PowerPlayEnums.strafeDirection.Left, timeout);
     }
 
 
@@ -93,7 +87,6 @@ public class Commands extends HardwareMapping {
     public void spinRight(double power, double heading, double timeout) {
         gyroTurn(power, -power, heading, timeout);
     }
-
 
 
     //
@@ -200,16 +193,16 @@ public class Commands extends HardwareMapping {
 
         // Determine new target position, and pass to motor controller
         if (direction == PowerPlayEnums.strafeDirection.Left) {
-             leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
-             leftFrontTarget = leftFrontMotor.getCurrentPosition() - newMotorPosition;
-             rightBackTarget = rightBackMotor.getCurrentPosition() - newMotorPosition;
-             rightFrontTarget = rightFrontMotor.getCurrentPosition() + newMotorPosition;
+            leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
+            leftFrontTarget = leftFrontMotor.getCurrentPosition() - newMotorPosition;
+            rightBackTarget = rightBackMotor.getCurrentPosition() - newMotorPosition;
+            rightFrontTarget = rightFrontMotor.getCurrentPosition() + newMotorPosition;
 
         } else { // strafe Right
-             leftBackTarget = leftBackMotor.getCurrentPosition() - newMotorPosition;
-             leftFrontTarget = leftFrontMotor.getCurrentPosition() + newMotorPosition;
-             rightBackTarget = rightBackMotor.getCurrentPosition() + newMotorPosition;
-             rightFrontTarget = rightFrontMotor.getCurrentPosition() - newMotorPosition;
+            leftBackTarget = leftBackMotor.getCurrentPosition() - newMotorPosition;
+            leftFrontTarget = leftFrontMotor.getCurrentPosition() + newMotorPosition;
+            rightBackTarget = rightBackMotor.getCurrentPosition() + newMotorPosition;
+            rightFrontTarget = rightFrontMotor.getCurrentPosition() - newMotorPosition;
         }
 
         encoderRunToPosition(power, leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget, timeoutS);
