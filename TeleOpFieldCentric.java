@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @TeleOp(name = "TeleOpFieldCentric", group = "TeleOp")
 //@Disabled
@@ -20,8 +18,9 @@ public class TeleOpFieldCentric extends LinearOpMode {
     static final double STANDARD_DRIVE_SPEED = .3;
     static final double TURBO_DRIVE_SPEED = .5;
     static final double ROTATE_SPEED = .3;
-    static final double LIFT_MAX_UP_POWER = .4;
+    static final double LIFT_MAX_UP_POWER = .6;
     static final double LIFT_MAX_DOWN_POWER = .3;
+    static final double LIFT_HOLD_POWER = .1;
 
     @Override
     public void runOpMode() {
@@ -54,6 +53,13 @@ public class TeleOpFieldCentric extends LinearOpMode {
                 telemetry.addData("Driving Mode:", "Field Centric");
             } else {
                 telemetry.addData("Driving Mode:", "Robot Centric");
+            }
+
+            if (robot.liftMinSensor.isPressed()){
+                telemetry.addData("Min:", "pressed");
+            }
+            if (robot.liftMaxSensor.isPressed()){
+                telemetry.addData("Max:", "pressed");
             }
             //Driver controller ---------------------
             if (gamepad1 != null) {
@@ -115,15 +121,35 @@ public class TeleOpFieldCentric extends LinearOpMode {
                     sleep(250);
                 }
 
+                if (gamepad2.left_bumper){
+                    //
+                    commands.liftMoveUp(LIFT_HOLD_POWER);
+                }
+
                 liftPower = -gamepad2.left_stick_y;
                 if (abs(liftPower) != 0) {
                     if (liftPower > 0) {
-                        commands.liftMoveUp(liftPower * LIFT_MAX_UP_POWER);
-                        telemetry.addData("lift move up at:",liftPower * LIFT_MAX_UP_POWER);
-                    }
-                    else{
-                        commands.liftMoveDown(liftPower * LIFT_MAX_DOWN_POWER);
-                        telemetry.addData("lift move down at:",liftPower * LIFT_MAX_DOWN_POWER);
+                        if (robot.liftMaxSensor.isPressed()){
+                            // hold the lift at the top with minimal power
+                            liftPower = LIFT_HOLD_POWER;
+                        }
+                        else {
+                            liftPower = liftPower * LIFT_MAX_UP_POWER;
+                        }
+
+                        commands.liftMoveUp(liftPower);
+                        telemetry.addData("lift move up at:", liftPower);
+                    } else {
+                        if (robot.liftMinSensor.isPressed()){
+                            // at the bottom no power needed
+                            liftPower = 0;
+                        }
+                        else {
+                            liftPower = liftPower * LIFT_MAX_DOWN_POWER;
+                        }
+
+                        commands.liftMoveDown(liftPower);
+                        telemetry.addData("lift move down at:", liftPower );
                     }
                 } else {
                     commands.liftStop();

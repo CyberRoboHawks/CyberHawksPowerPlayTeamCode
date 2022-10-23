@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -38,13 +40,26 @@ public class Commands extends HardwareMapping {
         rightFrontMotor.setMode(mode);
     }
 
-    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition) {
-        // TODO add move lift logic
-        //int currentMotorPosition = liftMotor.getCurrentPosition();
-        //int newMotorPosition = (int) (distanceInches * COUNTS_PER_INCH);
-
-        // Determine new target positions, and pass to motor controller
-        //int leftBackTarget = leftBackMotor.getCurrentPosition() + newMotorPosition;
+    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition) throws InterruptedException {
+        switch (liftPosition){
+            case Floor:
+                while (!liftMinSensor.isPressed()){
+                    liftMoveDown(-.15);
+                }
+                break;
+            case Drive:
+                while (liftMinSensor.isPressed()){
+                    liftMoveUp(.5);
+                    sleep(400);
+                }
+                break;
+            case HighJunction:
+                while (!liftMaxSensor.isPressed()){
+                    liftMoveUp(.6);
+                }
+                break;
+        }
+        liftStop();
     }
 
     public void liftResetPosition() {

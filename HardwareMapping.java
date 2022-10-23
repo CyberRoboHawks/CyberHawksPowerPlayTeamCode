@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -15,7 +16,8 @@ public class HardwareMapping {
     public DcMotor leftBackMotor = null;
     public DcMotor rightFrontMotor = null;
     public DcMotor rightBackMotor = null;
-
+    public TouchSensor liftMaxSensor = null;
+    public TouchSensor liftMinSensor = null;
     public Servo grabberServo = null;
 
     public DcMotor liftMotorLeft = null;
@@ -41,6 +43,8 @@ public class HardwareMapping {
         grabberServo = setupServo("grabberServo", 0);
         liftMotorLeft = setupMotor("liftMotorLeft", DcMotor.Direction.FORWARD, 0, false, true);
         liftMotorRight = setupMotor("liftMotorRight", DcMotor.Direction.REVERSE, 0, false, true);
+        liftMinSensor = hardwareMap.get(TouchSensor.class, "liftMin");
+        liftMaxSensor = hardwareMap.get(TouchSensor.class, "liftMax");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
