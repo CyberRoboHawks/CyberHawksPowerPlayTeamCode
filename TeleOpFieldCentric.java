@@ -19,7 +19,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
     static final double TURBO_DRIVE_SPEED = .5;
     static final double ROTATE_SPEED = .3;
     static final double LIFT_MAX_UP_POWER = .6;
-    static final double LIFT_MAX_DOWN_POWER = .3;
+    static final double LIFT_MAX_DOWN_POWER = .5;
     static final double LIFT_HOLD_POWER = .1;
 
     @Override
@@ -65,7 +65,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
             if (gamepad1 != null) {
 
                 // Field centric toggle
-                if (gamepad1.b) {
+                if (gamepad1.b && gamepad1.right_bumper) {
                     fieldCentric = !fieldCentric;
                     // Pause to let the user release the button
                     sleep(250);
