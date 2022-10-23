@@ -49,12 +49,12 @@ public abstract class AutonomousBase extends LinearOpMode {
                 commands.spinRight(DRIVE_SPEED, -48, 3);
                 break;
             case Right:
-                commands.spinLeft(DRIVE_SPEED, 49, 3);
+                commands.spinLeft(DRIVE_SPEED, 48, 3);
                 break;
         }
 
         // move slightly forward to place cone
-        commands.driveForward(DRIVE_SPEED, 6, 3);
+        commands.driveForward(DRIVE_SPEED, 5, 3);
         sleep(1000);
 
         //  open grabber and drop cone
@@ -82,7 +82,7 @@ public abstract class AutonomousBase extends LinearOpMode {
                 break;
             case Zone3Panel:
                 commands.spinRight(DRIVE_SPEED, -90, 3);
-                commands.driveForward(DRIVE_SPEED, 20, 5);
+                commands.driveForward(DRIVE_SPEED, 22, 5);
                 break;
         }
     }
