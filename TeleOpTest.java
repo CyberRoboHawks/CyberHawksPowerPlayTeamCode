@@ -42,7 +42,7 @@ public class TeleOpTest extends LinearOpMode {
                 }
 
                 if (gamepad1.b) {
-                    commands.liftMoveDown(-.4);
+                    commands.liftMoveDown(.4);
                 } else {
                     commands.liftStop();
                 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -44,7 +45,7 @@ public class Commands extends HardwareMapping {
         switch (liftPosition){
             case Floor:
                 while (!liftMinSensor.isPressed()){
-                    liftMoveDown(-.15);
+                    liftMoveDown(.05);
                 }
                 break;
             case Drive:
@@ -73,8 +74,8 @@ public class Commands extends HardwareMapping {
     }
 
     public void liftMoveDown(double power) {
-        liftMotorLeft.setPower(power);
-        liftMotorRight.setPower(power);
+        liftMotorLeft.setPower(-abs(power));
+        liftMotorRight.setPower(-abs(power));
     }
 
     public void liftStop() {
@@ -128,7 +129,7 @@ public class Commands extends HardwareMapping {
     private void gyroTurn(double leftMotorPower, double rightMotorPower, double heading, double timeout) {
         runtime.reset();
 
-        while (Math.abs(getRemainingAngle(heading)) >= 10 && (runtime.seconds() < timeout)) {
+        while (abs(getRemainingAngle(heading)) >= 10 && (runtime.seconds() < timeout)) {
             leftFrontMotor.setPower(leftMotorPower);
             leftBackMotor.setPower(leftMotorPower);
             rightFrontMotor.setPower(rightMotorPower);
@@ -158,10 +159,10 @@ public class Commands extends HardwareMapping {
 
         // reset the timeout time and start motion.
         runtime.reset();
-        leftBackMotor.setPower(Math.abs(power));
-        leftFrontMotor.setPower(Math.abs(power));
-        rightBackMotor.setPower(Math.abs(power));
-        rightFrontMotor.setPower(Math.abs(power));
+        leftBackMotor.setPower(abs(power));
+        leftFrontMotor.setPower(abs(power));
+        rightBackMotor.setPower(abs(power));
+        rightFrontMotor.setPower(abs(power));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits

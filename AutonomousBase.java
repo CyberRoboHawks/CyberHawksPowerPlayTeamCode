@@ -20,6 +20,7 @@ public abstract class AutonomousBase extends LinearOpMode {
     protected void executeOperations(PowerPlayEnums.startingSide startingSide) throws InterruptedException {
         // close grabber on the cone
         commands.grabberClose();
+        sleep(200);
 
         // read the signal for parking zone
         PowerPlayEnums.parkingZone parkingZone = objectDetection.readParkingZone(5, 500);
@@ -46,19 +47,31 @@ public abstract class AutonomousBase extends LinearOpMode {
         // turn towards the junction pole
         switch (startingSide) {
             case Left:
-                commands.spinRight(DRIVE_SPEED, -48, 3);
+                commands.spinRight(DRIVE_SPEED, -50, 3);
                 break;
             case Right:
-                commands.spinLeft(DRIVE_SPEED, 48, 3);
+                commands.spinLeft(DRIVE_SPEED, 50, 3);
                 break;
         }
 
         // move slightly forward to place cone
-        commands.driveForward(DRIVE_SPEED, 5, 3);
+        commands.driveForward(DRIVE_SPEED, 6.5, 3);
         sleep(1000);
+
+        commands.liftMoveDown(.1);
+        sleep(500);
+
+        commands.liftStop();
+
+        // hold the lift to drop the cone
+        commands.liftMoveUp(.1);
+        sleep(500);
 
         //  open grabber and drop cone
         commands.grabberOpen();
+
+//        // hold the lift at the high position
+//        commands.liftMoveUp(.1);
 
         // move backwards away from the high junction
         commands.driveBackwards(DRIVE_SPEED, 8, 2);
