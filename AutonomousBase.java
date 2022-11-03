@@ -28,7 +28,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.update();
 
         //raise lift to drive height
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive, 3);
         // hold the lift at the drive position
         commands.liftMoveUp(.1);
 
@@ -39,7 +39,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveBackwards(DRIVE_SPEED, 6, 3);
 
         //  raise lift to the high position
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction, 5);
 
         // hold the lift at the high position
         commands.liftMoveUp(.1);
@@ -77,7 +77,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveBackwards(DRIVE_SPEED, 8, 2);
 
         // lower lift
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor, 5);
 
         // navigate to parking location
         switch (parkingZone) {

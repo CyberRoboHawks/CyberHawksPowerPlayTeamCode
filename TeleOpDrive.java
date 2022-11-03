@@ -118,7 +118,7 @@ public class TeleOpDrive extends LinearOpMode {
 
                 if (gamepad2.a){
                     // move the lift off of field level
-                    commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
+                    commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive, 3);
                     // hold the lift at the drive position
                     commands.liftMoveUp(LIFT_HOLD_POWER);
                 }
