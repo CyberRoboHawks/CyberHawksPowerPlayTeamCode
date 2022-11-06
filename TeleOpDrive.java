@@ -68,22 +68,6 @@ public class TeleOpDrive extends LinearOpMode {
                 // Turbo driving
                 if (gamepad1.left_bumper) {
                     drivePower = TURBO_DRIVE_SPEED;  // turbo speed when the left bumper is pressed
-                } else {
-                    drivePower = STANDARD_DRIVE_SPEED; // normal speed when the left bumper is released
-                }
-
-                // d-pad quick turns
-                if (gamepad1.dpad_up) {
-                    commands.quickSpin(ROTATE_SPEED, 0, 3);
-                }
-                if (gamepad1.dpad_down) {
-                    commands.quickSpin(ROTATE_SPEED, 180, 3);
-                }
-                if (gamepad1.dpad_right) {
-                    commands.quickSpin(ROTATE_SPEED, -90, 3);
-                }
-                if (gamepad1.dpad_left) {
-                    commands.quickSpin(ROTATE_SPEED, 90, 3);
                 }
 
                 // mecanum driving
@@ -118,7 +102,7 @@ public class TeleOpDrive extends LinearOpMode {
 
                 if (gamepad2.a){
                     // move the lift off of field level
-                    commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive, 3);
+                    commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
                     // hold the lift at the drive position
                     commands.liftMoveUp(LIFT_HOLD_POWER);
                 }

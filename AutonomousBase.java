@@ -28,7 +28,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.update();
 
         //raise lift to drive height
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive, 3);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
         // hold the lift at the drive position
         commands.liftMoveUp(.1);
 
@@ -39,7 +39,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveBackwards(DRIVE_SPEED, 6, 3);
 
         //  raise lift to the high position
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction, 5);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction);
 
         // hold the lift at the high position
         commands.liftMoveUp(.1);
@@ -47,19 +47,19 @@ public abstract class AutonomousBase extends LinearOpMode {
         // turn towards the junction pole
         switch (startingSide) {
             case Left:
-                commands.spinRight(DRIVE_SPEED, -50, 3);
+                commands.spinRight(DRIVE_SPEED, -45, 3);
                 break;
             case Right:
-                commands.spinLeft(DRIVE_SPEED, 50, 3);
+                commands.spinLeft(DRIVE_SPEED, 45, 3);
                 break;
         }
 
         // move slightly forward to place cone
-        commands.driveForward(DRIVE_SPEED, 6.5, 3);
+        commands.driveForward(DRIVE_SPEED, 7, 3);
         sleep(1000);
 
         commands.liftMoveDown(.1);
-        sleep(500);
+        sleep(400);
 
         commands.liftStop();
 
@@ -77,13 +77,13 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveBackwards(DRIVE_SPEED, 8, 2);
 
         // lower lift
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor, 5);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor);
 
         // navigate to parking location
         switch (parkingZone) {
             case Zone1Bolt:
                 commands.spinLeft(DRIVE_SPEED, 90, 3);
-                commands.driveForward(DRIVE_SPEED, 24, 3);
+                commands.driveForward(DRIVE_SPEED, 20, 3);
                 break;
             case Zone2Bulb:
                 if (startingSide == PowerPlayEnums.startingSide.Left){

@@ -19,7 +19,7 @@ public class Commands extends HardwareMapping {
     private final ElapsedTime runtime = new ElapsedTime();
 
     public void grabberClose() {
-        grabberServo.setPosition(.3);
+        grabberServo.setPosition(.4);
     }
 
     public void grabberOpen() { grabberServo.setPosition(0); }
@@ -41,23 +41,21 @@ public class Commands extends HardwareMapping {
         rightFrontMotor.setMode(mode);
     }
 
-    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition, double timeout) throws InterruptedException {
-        runtime.reset();
-
+    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition) throws InterruptedException {
         switch (liftPosition){
             case Floor:
-                while (!liftMinSensor.isPressed() && (runtime.seconds() < timeout)){
+                while (!liftMinSensor.isPressed()){
                     liftMoveDown(.05);
                 }
                 break;
             case Drive:
-                while (liftMinSensor.isPressed() && (runtime.seconds() < timeout)){
+                while (liftMinSensor.isPressed()){
                     liftMoveUp(.5);
-                    sleep(400);
+                    sleep(500);
                 }
                 break;
             case HighJunction:
-                while (!liftMaxSensor.isPressed() && (runtime.seconds() < timeout)){
+                while (!liftMaxSensor.isPressed()){
                     liftMoveUp(.6);
                 }
                 break;
