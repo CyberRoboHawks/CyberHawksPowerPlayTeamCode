@@ -27,19 +27,22 @@ public abstract class AutonomousBase extends LinearOpMode {
         telemetry.addData("ParkingZone :", parkingZone);
         telemetry.update();
 
+        // drive forward to move off the wall
+        commands.driveForward(DRIVE_SPEED, 5, 2);
+
         //raise lift to drive height
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Drive, 3);
         // hold the lift at the drive position
         commands.liftMoveUp(.1);
 
         // drive towards the high junction pole and push signal out of the way
-        commands.driveForward(DRIVE_SPEED, 60, 5);
+        commands.driveForward(DRIVE_SPEED, 55, 5);
 
         // back up
-        commands.driveBackwards(DRIVE_SPEED, 6, 3);
+        commands.driveBackwards(DRIVE_SPEED, 9, 3);
 
         //  raise lift to the high position
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction, 5);
 
         // hold the lift at the high position
         commands.liftMoveUp(.1);
@@ -55,11 +58,11 @@ public abstract class AutonomousBase extends LinearOpMode {
         }
 
         // move slightly forward to place cone
-        commands.driveForward(DRIVE_SPEED, 7, 3);
+        commands.driveForward(DRIVE_SPEED, 6, 3);
         sleep(1000);
 
         commands.liftMoveDown(.1);
-        sleep(400);
+        sleep(300);
 
         commands.liftStop();
 
@@ -77,7 +80,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveBackwards(DRIVE_SPEED, 8, 2);
 
         // lower lift
-        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor);
+        commands.liftMoveToPosition(PowerPlayEnums.liftPosition.Floor, 5);
 
         // navigate to parking location
         switch (parkingZone) {

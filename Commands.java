@@ -41,21 +41,23 @@ public class Commands extends HardwareMapping {
         rightFrontMotor.setMode(mode);
     }
 
-    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition) throws InterruptedException {
+    public void liftMoveToPosition(PowerPlayEnums.liftPosition liftPosition, double timeout) throws InterruptedException {
+        runtime.reset();
+
         switch (liftPosition){
             case Floor:
-                while (!liftMinSensor.isPressed()){
+                while (!liftMinSensor.isPressed() && (runtime.seconds() < timeout)){
                     liftMoveDown(.05);
                 }
                 break;
             case Drive:
-                while (liftMinSensor.isPressed()){
+                while (liftMinSensor.isPressed() && (runtime.seconds() < timeout)){
                     liftMoveUp(.5);
-                    sleep(500);
+                    sleep(400);
                 }
                 break;
             case HighJunction:
-                while (!liftMaxSensor.isPressed()){
+                while (!liftMaxSensor.isPressed() && (runtime.seconds() < timeout)){
                     liftMoveUp(.6);
                 }
                 break;
@@ -103,7 +105,6 @@ public class Commands extends HardwareMapping {
     public void spinRight(double power, double heading, double timeout) {
         gyroTurn(power, -power, heading, timeout);
     }
-
 
     //
     public void quickSpin(double power, double heading, double timeout) {
