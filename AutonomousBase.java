@@ -39,7 +39,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.driveForward(DRIVE_SPEED, 55, 5);
 
         // back up
-        commands.driveBackwards(DRIVE_SPEED, 9, 3);
+        commands.driveBackwards(DRIVE_SPEED, 8, 3);
 
         //  raise lift to the high position
         commands.liftMoveToPosition(PowerPlayEnums.liftPosition.HighJunction, 5);
@@ -58,11 +58,11 @@ public abstract class AutonomousBase extends LinearOpMode {
         }
 
         // move slightly forward to place cone
-        commands.driveForward(DRIVE_SPEED, 6, 3);
+        commands.driveForward(DRIVE_SPEED, 8.5, 3);
         sleep(1000);
 
-        commands.liftMoveDown(.1);
-        sleep(300);
+        commands.liftMoveDown(.2);
+        sleep(400);
 
         commands.liftStop();
 
