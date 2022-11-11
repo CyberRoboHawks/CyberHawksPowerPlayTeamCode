@@ -36,7 +36,10 @@ public abstract class AutonomousBase extends LinearOpMode {
         commands.liftMoveUp(.1);
 
         // drive towards the high junction pole and push signal out of the way
-        commands.driveForward(DRIVE_SPEED, 55, 5);
+        //commands.driveForward(DRIVE_SPEED, 55, 5);
+
+        // drive towards the mid junction pole and push signal out of the way
+        commands.driveForward(DRIVE_SPEED, 30, 5);
 
         // back up
         commands.driveBackwards(DRIVE_SPEED, 8, 3);
@@ -62,7 +65,7 @@ public abstract class AutonomousBase extends LinearOpMode {
         sleep(1000);
 
         commands.liftMoveDown(.2);
-        sleep(400);
+        sleep(600);
 
         commands.liftStop();
 
@@ -72,9 +75,6 @@ public abstract class AutonomousBase extends LinearOpMode {
 
         //  open grabber and drop cone
         commands.grabberOpen();
-
-//        // hold the lift at the high position
-//        commands.liftMoveUp(.1);
 
         // move backwards away from the high junction
         commands.driveBackwards(DRIVE_SPEED, 8, 2);
