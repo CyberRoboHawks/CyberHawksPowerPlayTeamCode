@@ -16,8 +16,8 @@ public class TeleOpDrive extends LinearOpMode {
     HardwareMapping robot = new HardwareMapping();   // Use our hardware mapping
     Commands commands = new Commands();
     static final double STANDARD_DRIVE_SPEED = .3;
-    static final double TURBO_DRIVE_SPEED = .5;
-    static final double ROTATE_SPEED = .3;
+    static final double TURBO_DRIVE_SPEED = .6;
+    static final double STRAFE_SPEED = .4;
     static final double LIFT_MAX_UP_POWER = .5;
     static final double LIFT_MAX_DOWN_POWER = .15;
     static final double LIFT_HOLD_POWER = .2;
@@ -160,6 +160,11 @@ public class TeleOpDrive extends LinearOpMode {
         // normalize the x/y offset and apply control stick power
         yOffset = power * yOffset / maxOffset;
         xOffset = power * xOffset / maxOffset;
+
+        if (Math.abs(strafeSpeed)> .2 )
+        {
+            drivePower = STRAFE_SPEED;
+        }
 
         double leftFrontPower = (xOffset + rotate) * drivePower;
         double leftBackPower = (yOffset + rotate) * drivePower;

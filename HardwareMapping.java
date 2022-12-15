@@ -40,7 +40,7 @@ public class HardwareMapping {
         rightBackMotor = setupMotor("rightBackMotor", DcMotor.Direction.REVERSE, 0, true,true);
 
         //TODO setup lift and grabber motors
-        grabberServo = setupServo("grabberServo", 0);
+        grabberServo = setupServo("grabberServo", 0.05);
         liftMotorLeft = setupMotor("liftMotorLeft", DcMotor.Direction.FORWARD, 0, false, true);
         liftMotorRight = setupMotor("liftMotorRight", DcMotor.Direction.REVERSE, 0, false, true);
         liftMinSensor = hardwareMap.get(TouchSensor.class, "liftMin");
@@ -81,7 +81,7 @@ public class HardwareMapping {
     /* Init CRServo and set initial power
      * @return the configured CRServo or null if the servo is not found
      */
-    private CRServo setupCRServo(String name, int initialPower) {
+    private CRServo setupCRServo(String name, double initialPower) {
         try {
             CRServo servo = hardwareMap.get(CRServo.class, name);
             servo.setPower(initialPower);

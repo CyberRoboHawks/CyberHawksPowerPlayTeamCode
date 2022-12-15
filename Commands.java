@@ -22,7 +22,7 @@ public class Commands extends HardwareMapping {
         grabberServo.setPosition(.4);
     }
 
-    public void grabberOpen() { grabberServo.setPosition(0); }
+    public void grabberOpen() { grabberServo.setPosition(.05); }
 
     // Drive forward
     public void driveForward(double power, double distanceInInches, double timeout) {
